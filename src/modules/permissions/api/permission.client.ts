@@ -1,16 +1,42 @@
-import { fetchMockPermissions } from '@/mocks/permissions.mock'
-import type { PermissionsResponse, UserProfile } from '../types/permission.types'
+import {
+  fetchUserPermissionTree,
+  persistUserPermissionTree,
+  profileUserId,
+} from '@/mocks/permission-tree.mock'
+import { collectAssignedKeys } from '../services/permission-tree.service'
+import type {
+  PermissionNode,
+  PermissionsResponse,
+  UserProfile,
+} from '../types/permission.types'
 
 /**
- * Seam for the future Laravel endpoint:
+ * Seam for the future Laravel endpoints:
  *   GET /api/me/permissions
- *   { "permissions": ["users.view", "..."] }
+ *   GET /api/users/:id/permissions
+ *   PUT /api/users/:id/permissions
  *
- * Replace this function with an HTTP call. Do not change the Permission Service,
- * composable, directive, or route guard.
- *
- * `profile` exists only while the PoC simulates multiple users locally.
+ * Replace these functions with HTTP calls. Do not change the Permission Service,
+ * hook, directive, or route guard.
  */
-export function fetchCurrentUserPermissions(profile: UserProfile): Promise<PermissionsResponse> {
-  return fetchMockPermissions(profile)
+export async function fetchCurrentUserPermissions(
+  profile: UserProfile,
+): Promise<PermissionsResponse> {
+  const userId = profileUserId(profile)
+  const tree = await fetchUserPermissionTree(userId, profile)
+  return { permissions: collectAssignedKeys(tree) }
+}
+
+export function fetchPermissionsTree(
+  userId: number,
+  profile: UserProfile,
+): Promise<PermissionNode[]> {
+  return fetchUserPermissionTree(userId, profile)
+}
+
+export function saveUserPermissions(
+  userId: number,
+  tree: PermissionNode[],
+): Promise<PermissionsResponse> {
+  return persistUserPermissionTree(userId, tree)
 }

@@ -48,5 +48,30 @@ const profileLabel = computed(() =>
         <li v-for="permission in permissions" :key="permission" class="chip">{{ permission }}</li>
       </ul>
     </article>
+
+    <article class="panel">
+      <h2>Ações PIX</h2>
+      <p class="muted">
+        Estas ações usam as chaves da árvore PIX. Marque-as em Permissões, salve para o usuário
+        logado e elas aparecem aqui na hora.
+      </p>
+      <div class="page__actions page__actions--after">
+        <button v-permission="'pix.create'" type="button" class="btn btn--secondary">
+          Incluir PIX
+        </button>
+        <button v-permission="'pix.approve'" type="button" class="btn btn--primary">
+          Aprovar PIX
+        </button>
+        <button v-permission="'pix.charge.create'" type="button" class="btn btn--secondary">
+          Incluir cobrança
+        </button>
+        <button v-permission="'pix.charge.cancel'" type="button" class="btn btn--danger">
+          Cancelar cobrança
+        </button>
+        <button v-permission="'pix.pos.view'" type="button" class="btn btn--secondary">
+          Ver ponto de venda
+        </button>
+      </div>
+    </article>
   </section>
 </template>

@@ -40,7 +40,7 @@ async function handleLogin(profile: UserProfile) {
 <template>
   <main class="auth-page">
     <section class="auth-card">
-      <p class="eyebrow">PBAC PoC</p>
+      <p class="eyebrow">Permission-Based Access Control</p>
       <h1>Entrar</h1>
       <p class="muted">
         Autenticação e permissões são mockadas. Escolha um perfil para simular a resposta do Laravel.

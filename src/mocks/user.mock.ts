@@ -44,8 +44,20 @@ export interface DirectoryUser {
 }
 
 export const mockDirectoryUsers: DirectoryUser[] = [
-  { id: 1, name: 'Ana Souza', email: 'ana@example.com', role: 'Operador' },
-  { id: 2, name: 'Bruno Lima', email: 'bruno@example.com', role: 'Visualizador' },
-  { id: 3, name: 'Carla Dias', email: 'carla@example.com', role: 'Administrador' },
+  { id: 1, name: 'Administrador', email: 'admin@example.com', role: 'Administrador' },
+  { id: 2, name: 'Operador', email: 'operator@example.com', role: 'Operador' },
+  { id: 3, name: 'Visualizador', email: 'viewer@example.com', role: 'Visualizador' },
   { id: 4, name: 'Diego Alves', email: 'diego@example.com', role: 'Operador' },
 ]
+
+export function profileFromRole(role: string): UserProfile {
+  if (role === 'Administrador') {
+    return 'admin'
+  }
+
+  if (role === 'Visualizador') {
+    return 'viewer'
+  }
+
+  return 'operator'
+}

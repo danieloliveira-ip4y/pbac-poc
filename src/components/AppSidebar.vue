@@ -4,7 +4,7 @@ import { RouterLink, useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { logout } from '@/modules/auth/services/auth.service'
 import { useAuthStore } from '@/modules/auth/stores/auth.store'
-import { usePermission } from '@/modules/permissions/composables/usePermission'
+import { usePermission } from '@/modules/permissions/hooks/usePermission'
 import { profileLabels } from '@/mocks/user.mock'
 import type { Permission } from '@/modules/permissions/types/permission.types'
 
@@ -19,6 +19,7 @@ const navItems: NavItem[] = [
   { to: '/users', label: 'Usuários', permission: 'users.view' },
   { to: '/reports', label: 'Relatórios', permission: 'reports.view' },
   { to: '/settings', label: 'Configurações', permission: 'settings.view' },
+  { to: '/permissions', label: 'Permissões', permission: 'permissions.manage' },
 ]
 
 const router = useRouter()
@@ -31,20 +32,32 @@ const profileLabel = computed(() =>
   currentProfile.value ? profileLabels[currentProfile.value] : '—',
 )
 
+const emit = defineEmits<{
+  close: []
+}>()
+
 async function handleLogout() {
+  emit('close')
   logout()
   await router.replace({ name: 'login' })
 }
 </script>
 
 <template>
-  <aside class="sidebar">
+  <aside id="app-sidebar" class="sidebar">
     <div class="sidebar__brand">
-      <span class="sidebar__badge">PBAC</span>
       <div>
-        <strong>Permission PoC</strong>
+        <strong>Permission-Based Access Control</strong>
         <p>Vue 3 · Pinia · Router</p>
       </div>
+      <button
+        type="button"
+        class="sidebar__close"
+        aria-label="Fechar menu"
+        @click="emit('close')"
+      >
+        ×
+      </button>
     </div>
 
     <nav class="sidebar__nav">

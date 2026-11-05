@@ -4,7 +4,7 @@ import { useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { switchProfile } from '@/modules/auth/services/auth.service'
 import { useAuthStore } from '@/modules/auth/stores/auth.store'
-import { usePermission } from '@/modules/permissions/composables/usePermission'
+import { usePermission } from '@/modules/permissions/hooks/usePermission'
 import { usePermissionStore } from '@/modules/permissions/stores/permission.store'
 import { profileLabels } from '@/mocks/user.mock'
 import type { UserProfile } from '@/modules/permissions/types/permission.types'
@@ -47,7 +47,7 @@ async function handleSwitch(profile: UserProfile) {
     <header class="debugger__header">
       <div>
         <h2>Permission Debugger</h2>
-        <p>Troque o perfil para validar store, service, guard e UI em tempo real.</p>
+        <p>Troque o perfil para validar store, service, guard e UI em tempo real. O trace sai no console.</p>
       </div>
       <span class="pill" :class="isLoading ? 'pill--warn' : 'pill--ok'">
         {{ isLoading ? 'Carregando' : isLoaded ? 'Carregado' : 'Vazio' }}

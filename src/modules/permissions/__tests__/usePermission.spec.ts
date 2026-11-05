@@ -2,7 +2,7 @@ import { mount } from '@vue/test-utils'
 import { createPinia, getActivePinia, setActivePinia } from 'pinia'
 import { beforeEach, describe, expect, it } from 'vitest'
 import { defineComponent, nextTick } from 'vue'
-import { usePermission } from '../composables/usePermission'
+import { usePermission } from '../hooks/usePermission'
 import { usePermissionStore } from '../stores/permission.store'
 
 const Probe = defineComponent({

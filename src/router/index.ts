@@ -74,6 +74,16 @@ const router = createRouter({
         permissionMode: 'all',
       },
     },
+    {
+      path: '/permissions',
+      name: 'permissions',
+      component: () => import('@/pages/Permissions.vue'),
+      meta: {
+        requiresAuth: true,
+        permissions: ['permissions.manage'],
+        permissionMode: 'all',
+      },
+    },
   ],
 })
 
