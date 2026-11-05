@@ -1,5 +1,12 @@
 export type PermissionLogLayer = 'auth' | 'store' | 'guard' | 'admin'
 
+export const permissionLogLayerLabels: Record<PermissionLogLayer, string> = {
+  auth: 'Auth',
+  store: 'Store',
+  guard: 'Guard',
+  admin: 'Admin',
+}
+
 export type PermissionLogDetails = Readonly<Record<string, string | number | boolean | null>>
 
 export interface PermissionLogEntry {
@@ -77,7 +84,7 @@ class PermissionLogger {
       return
     }
 
-    const prefix = `[Permission-Based Access Control ${entry.seq}] ${entry.layer}:${entry.event}`
+    const prefix = formatPermissionLogPrefix(entry)
     if (entry.details) {
       console.log(prefix, entry.message, { ...entry.details })
       return
@@ -85,6 +92,12 @@ class PermissionLogger {
 
     console.log(prefix, entry.message)
   }
+}
+
+export function formatPermissionLogPrefix(
+  entry: Pick<PermissionLogEntry, 'seq' | 'layer' | 'event'>,
+): string {
+  return `[${permissionLogLayerLabels[entry.layer]}] ${entry.seq} ${entry.event}`
 }
 
 export const permissionLogger = new PermissionLogger()

@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { createMemoryHistory, createRouter, type RouteRecordRaw } from 'vue-router'
 import { useAuthStore } from '@/modules/auth/stores/auth.store'
 import { permissionGuard } from '../guards/permission.guard'
-import { permissionLogger } from '../logger/permission.logger'
+import { formatPermissionLogPrefix, permissionLogger } from '../logger/permission.logger'
 import { saveAssignedPermissions } from '../services/permission-assignment.service'
 import { toggleNode } from '../services/permission-tree.service'
 import { usePermissionStore } from '../stores/permission.store'
@@ -42,6 +42,21 @@ describe('permissionLogger', () => {
     setActivePinia(createPinia())
     permissionLogger.reset()
     resetPermissionAssignments()
+  })
+
+  it('prefixes console output with the triggered layer instead of the product name', () => {
+    expect(
+      formatPermissionLogPrefix({ seq: 1, layer: 'auth', event: 'login' }),
+    ).toBe('[Auth] 1 login')
+    expect(
+      formatPermissionLogPrefix({ seq: 2, layer: 'store', event: 'load.start' }),
+    ).toBe('[Store] 2 load.start')
+    expect(
+      formatPermissionLogPrefix({ seq: 3, layer: 'guard', event: 'evaluate.result' }),
+    ).toBe('[Guard] 3 evaluate.result')
+    expect(
+      formatPermissionLogPrefix({ seq: 4, layer: 'admin', event: 'save.start' }),
+    ).toBe('[Admin] 4 save.start')
   })
 
   it('records events in insertion order with a monotonic sequence', () => {

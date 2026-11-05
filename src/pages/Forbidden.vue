@@ -9,6 +9,8 @@ import { RouterLink } from 'vue-router'
     <p class="muted">
       Você está autenticado, mas o perfil atual não possui as permissões exigidas por esta rota.
     </p>
-    <RouterLink class="btn btn--primary" to="/dashboard">Voltar ao dashboard</RouterLink>
+    <div class="page__actions">
+      <RouterLink class="btn btn--primary" to="/dashboard">Voltar ao dashboard</RouterLink>
+    </div>
   </section>
 </template>
