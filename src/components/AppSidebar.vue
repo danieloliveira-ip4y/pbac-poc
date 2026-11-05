@@ -47,7 +47,7 @@ async function handleLogout() {
   <aside id="app-sidebar" class="sidebar">
     <div class="sidebar__brand">
       <div>
-        <strong>Permission-Based Access Control</strong>
+        <strong>PBAC (Permission-Based Access Control)</strong>
         <p>Vue 3 · Pinia · Router</p>
       </div>
       <button

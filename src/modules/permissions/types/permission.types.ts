@@ -18,7 +18,7 @@ export type PermissionDirectiveValue = Permission | Permission[] | PermissionChe
 /**
  * Tree node matching the Laravel catalog payload.
  * `assigned` exists only on grantable permissions. Nodes without it are groups.
- * `key` is optional and used by the PoC to bind a node to a frontend permission string.
+ * `key` is optional and used by the PoC (Proof of Concept) to bind a node to a frontend permission string.
  */
 export interface PermissionNode {
   id: number
