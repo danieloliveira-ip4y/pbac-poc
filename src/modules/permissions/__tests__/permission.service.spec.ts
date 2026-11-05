@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { createPermissionService } from '../services/permission.service'
 
-const granted = ['dashboard.view', 'users.view', 'users.create', 'users.view']
+const granted = ['dashboard.view', 'users.view', 'users.create', 'users.view'] as const
 
 describe('PermissionService', () => {
   it('allows a permission the user has', () => {

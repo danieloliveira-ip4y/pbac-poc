@@ -30,6 +30,18 @@ const routes: RouteRecordRaw[] = [
     component: { template: '<div>settings</div>' },
     meta: { requiresAuth: true, permissions: ['settings.view'], permissionMode: 'all' },
   },
+  {
+    path: '/undeclared',
+    name: 'undeclared',
+    component: { template: '<div>undeclared</div>' },
+    meta: { requiresAuth: true },
+  },
+  {
+    path: '/empty-permissions',
+    name: 'empty-permissions',
+    component: { template: '<div>empty</div>' },
+    meta: { requiresAuth: true, permissions: [] },
+  },
 ]
 
 function createTestRouter() {
@@ -82,6 +94,26 @@ describe('permissionGuard', () => {
     await router.push('/login')
 
     expect(router.currentRoute.value.name).toBe('login')
+  })
+
+  it('denies an authenticated route that does not declare permissions', async () => {
+    const authStore = useAuthStore()
+    const router = createTestRouter()
+
+    authStore.login('admin')
+    await router.push('/undeclared')
+
+    expect(router.currentRoute.value.name).toBe('forbidden')
+  })
+
+  it('denies an authenticated route with an empty permissions list', async () => {
+    const authStore = useAuthStore()
+    const router = createTestRouter()
+
+    authStore.login('admin')
+    await router.push('/empty-permissions')
+
+    expect(router.currentRoute.value.name).toBe('forbidden')
   })
 
   it('does not loop when an authenticated user visits login', async () => {

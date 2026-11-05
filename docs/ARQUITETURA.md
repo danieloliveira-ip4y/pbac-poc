@@ -66,6 +66,7 @@ src/
 │   │   └── services/auth.service.ts     # orquestra login / logout / troca de perfil
 │   └── permissions/
 │       ├── types/permission.types.ts
+│       ├── catalog/permissions.ts       # literais recurso.acao (Permission)
 │       ├── api/permission.client.ts     # único ponto a virar HTTP
 │       ├── services/
 │       │   ├── permission.service.ts    # avaliador puro (can / canAny / canAll / check)
@@ -191,10 +192,12 @@ Contrato compartilhado. Nada de Vue.
 
 | Tipo | Papel |
 | --- | --- |
-| `Permission` | `string` no formato `recurso.acao` (`users.view`, `pix.approve`) |
+| `PERMISSIONS` | `as const` em `catalog/permissions.ts` — todas as chaves `recurso.acao` |
+| `Permission` | união desses literais (`users.view`, `pix.approve`, …). Typo não compila |
+| `isPermission` / `retainKnownPermissions` | filtro em runtime (Store descarta chave desconhecida do payload) |
 | `PermissionMode` | `'all'` (precisa de todas) ou `'any'` (basta uma) |
 | `UserProfile` | `'admin' \| 'operator' \| 'viewer'` — só existe na PoC (Proof of Concept) para alternar personas |
-| `PermissionsResponse` | `{ permissions: string[] }` — payload de `GET /api/me/permissions` |
+| `PermissionsResponse` | `{ permissions: Permission[] }` — payload de `GET /api/me/permissions` |
 | `PermissionDirectiveValue` | string, array, ou `{ permissions, mode }` |
 | `PermissionNode` | nó do catálogo Laravel: `id`, `description`, `assigned?`, `children`, `key?` |
 | `PermissionCheckState` | `'checked' \| 'unchecked' \| 'indeterminate'` na árvore |
@@ -302,10 +305,10 @@ O Map **sobrevive à troca de perfil na mesma sessão do browser**. Recarregar a
 
 | Estado / método | Função |
 | --- | --- |
-| `permissions` | `string[]` vigente |
+| `permissions` | `Permission[]` vigente (só chaves do catálogo) |
 | `isLoading` / `isLoaded` / `error` | ciclo de carga |
 | `permissionCount` | tamanho da lista |
-| `loadPermissions(profile)` | busca no client; ignora resposta stale (`requestId`) |
+| `loadPermissions(profile)` | busca no client; `retainKnownPermissions`; ignora stale (`requestId`) |
 | `updatePermissions(list)` | grava lista sem fetch (save admin na sessão atual, testes) |
 | `clearPermissions()` | volta ao vazio (logout) |
 
@@ -340,7 +343,7 @@ Regras de lista vazia (estáveis, cobertas por teste):
 | `check([], 'any')` | `false` | igual a `canAny` |
 | `check([], 'all')` | `true` | igual a `canAll` |
 
-Rota sem `meta.permissions` cai em `check([], 'all')` → **libera**, desde que autenticado. Por isso `/login` e `/403` usam `requiresAuth: false`, e rotas autenticadas sempre declaram a permissão.
+No **Service**, `canAll([])` continua `true` (não há requisito). No **Guard**, rota autenticada sem `meta.permissions` (ou com lista vazia) **não** chama o Service: vai para `/403`. Quem precisa só “estar logado” declara uma chave explícita (ex. `dashboard.view`). `/login` e `/403` usam `requiresAuth: false`.
 
 Quem chama: **somente** Guard, `usePermission` e `v-permission`. Páginas não importam o Service.
 
@@ -362,11 +365,13 @@ Algoritmo:
      senão → true  (/login, /403)
 2. não autenticado ou sem currentProfile
      → { name: 'login', query: { redirect: fullPath } }
-3. permissionStore.isLoaded === false
+3. meta.permissions ausente ou vazio
+     → { name: 'forbidden' }          // fail-closed; não chama o Service
+4. permissionStore.isLoaded === false
      → loadPermissions(currentProfile)
      se o fetch falhar → { name: 'forbidden' }
-4. service.check(meta.permissions ?? [], meta.permissionMode ?? 'all')
-5. false → { name: 'forbidden' }
+5. service.check(meta.permissions, meta.permissionMode ?? 'all')
+6. false → { name: 'forbidden' }
    true  → true
 ```
 
@@ -747,11 +752,12 @@ Isso é o que mantém o desenho testável e plugável no Laravel:
 | Tree Service | importar Vue / Pinia / HTTP |
 | Permission Store | implementar `can` / `canAny` / `canAll` |
 | Páginas | ler `permissionStore.permissions` para decidir botão (exceto listar no Dashboard/Debugger) |
-| Guard | copiar a lógica do Service; só chama `check` |
+| Guard | copiar a lógica do Service; só chama `check`. Não liberar rota autenticada sem `meta.permissions` |
 | Hook / diretiva | buscar API; só leem o Store e perguntam ao Service |
 | Logger | entrar no Service |
 | `localStorage` | ser fonte de verdade das permissões |
 | `permission:{id}` | existir como chave; grantable sem `key` é erro |
+| Chave fora de `PERMISSIONS` | passar no type-check; o Store também descarta em runtime |
 
 ---
 

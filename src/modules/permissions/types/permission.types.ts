@@ -1,4 +1,7 @@
-export type Permission = string
+import type { Permission } from '../catalog/permissions'
+
+export type { Permission }
+export { PERMISSIONS, isPermission, retainKnownPermissions } from '../catalog/permissions'
 
 export type PermissionMode = 'all' | 'any'
 

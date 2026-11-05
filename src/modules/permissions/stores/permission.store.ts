@@ -1,6 +1,7 @@
 import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
 import { fetchCurrentUserPermissions } from '../api/permission.client'
+import { retainKnownPermissions } from '../catalog/permissions'
 import { permissionLogger } from '../logger/permission.logger'
 import type { Permission, UserProfile } from '../types/permission.types'
 
@@ -32,13 +33,14 @@ export const usePermissionStore = defineStore('permission', () => {
         return
       }
 
-      permissions.value = [...response.permissions]
+      const nextPermissions = retainKnownPermissions(response.permissions)
+      permissions.value = nextPermissions
       isLoaded.value = true
       permissionLogger.trace(
         'store',
         'load.success',
-        `${response.permissions.length} permissões carregadas`,
-        { profile, count: response.permissions.length },
+        `${nextPermissions.length} permissões carregadas`,
+        { profile, count: nextPermissions.length },
       )
     } catch (reason) {
       if (currentRequestId !== requestId) {
@@ -59,15 +61,16 @@ export const usePermissionStore = defineStore('permission', () => {
 
   function updatePermissions(nextPermissions: Permission[]): void {
     requestId += 1
-    permissions.value = [...nextPermissions]
+    const known = retainKnownPermissions(nextPermissions)
+    permissions.value = known
     isLoading.value = false
     isLoaded.value = true
     error.value = null
     permissionLogger.trace(
       'store',
       'update',
-      `Store atualizado com ${nextPermissions.length} permissões`,
-      { count: nextPermissions.length },
+      `Store atualizado com ${known.length} permissões`,
+      { count: known.length },
     )
   }
 

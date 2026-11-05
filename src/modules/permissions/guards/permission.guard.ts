@@ -66,6 +66,21 @@ export async function evaluateRouteAccess(
     return result
   }
 
+  const requiredPermissions = to.meta.permissions ?? []
+  if (requiredPermissions.length === 0) {
+    const result = { name: 'forbidden' } as const
+    permissionLogger.trace(
+      'guard',
+      'evaluate.result',
+      'Rota autenticada sem permissões declaradas',
+      {
+        path,
+        result: describeAccess(result),
+      },
+    )
+    return result
+  }
+
   if (!permissionStore.isLoaded) {
     try {
       permissionLogger.trace('guard', 'permissions.load', 'Permissões ainda não carregadas', {
@@ -82,7 +97,6 @@ export async function evaluateRouteAccess(
     }
   }
 
-  const requiredPermissions = to.meta.permissions ?? []
   const mode = to.meta.permissionMode ?? 'all'
   const allowed = createPermissionService(permissionStore.permissions).check(
     requiredPermissions,
