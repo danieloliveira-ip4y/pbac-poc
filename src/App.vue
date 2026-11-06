@@ -25,7 +25,7 @@ const pageTitles: Record<string, string> = {
 
 const pageTitle = computed(() => {
   const name = typeof route.name === 'string' ? route.name : ''
-  return pageTitles[name] ?? 'PBAC (Permission-Based Access Control)'
+  return pageTitles[name] ?? 'Permission-Based Access Control'
 })
 
 function closeNav() {

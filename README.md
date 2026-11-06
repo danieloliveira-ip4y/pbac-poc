@@ -1,6 +1,8 @@
-# PBAC (Permission-Based Access Control)
+# Permission-Based Access Control
 
-PoC (Proof of Concept) de **PBAC (Permission-Based Access Control)** em Vue 3, TypeScript, Pinia e Vue Router. Autenticação e permissões são mockadas no formato esperado de um Laravel (`GET /api/me/permissions`).
+PoC (Proof of Concept) de **Permission-Based Access Control** em Vue 3, TypeScript, Pinia e Vue Router. Autenticação e permissões são mockadas no formato esperado de um Laravel (`GET /api/me/permissions`).
+
+Repositório: [danieloliveira-ip4y/permission-based-access-control-poc](https://github.com/danieloliveira-ip4y/permission-based-access-control-poc).
 
 A documentação da arquitetura — o que cada camada faz, quem chama quem, catálogo, logger e fluxos — está em **[docs/ARQUITETURA.md](docs/ARQUITETURA.md)**.
 
