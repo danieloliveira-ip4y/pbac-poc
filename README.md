@@ -1,54 +1,23 @@
-# pbac-poc
+# Permission-Based Access Control
 
-This template should help get you started developing with Vue 3 in Vite.
+PoC (Proof of Concept) de **Permission-Based Access Control** em Vue 3, TypeScript, Pinia e Vue Router. Autenticação e permissões são mockadas no formato esperado de um Laravel (`GET /api/me/permissions`).
 
-## Recommended IDE Setup
+Repositório: [danieloliveira-ip4y/permission-based-access-control-poc](https://github.com/danieloliveira-ip4y/permission-based-access-control-poc).
 
-[VS Code](https://code.visualstudio.com/) + [Vue (Official)](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+A documentação da arquitetura — o que cada camada faz, quem chama quem, catálogo, logger e fluxos — está em **[docs/ARQUITETURA.md](docs/ARQUITETURA.md)**.
 
-## Recommended Browser Setup
-
-- Chromium-based browsers (Chrome, Edge, Brave, etc.):
-  - [Vue.js devtools](https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd)
-  - [Turn on Custom Object Formatter in Chrome DevTools](http://bit.ly/object-formatters)
-- Firefox:
-  - [Vue.js devtools](https://addons.mozilla.org/en-US/firefox/addon/vue-js-devtools/)
-  - [Turn on Custom Object Formatter in Firefox DevTools](https://fxdx.dev/firefox-devtools-custom-object-formatters/)
-
-## Type Support for `.vue` Imports in TS
-
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vite.dev/config/).
-
-## Project Setup
+## Como rodar
 
 ```sh
-npm install
-```
-
-### Compile and Hot-Reload for Development
-
-```sh
+npm install --legacy-peer-deps
 npm run dev
 ```
 
-### Type-Check, Compile and Minify for Production
-
-```sh
-npm run build
-```
-
-### Run Unit Tests with [Vitest](https://vitest.dev/)
+Abre [http://localhost:5173](http://localhost:5173). Entre como Administrador, Operador ou Visualizador e use o Permission Debugger para trocar o perfil sem recarregar a página.
 
 ```sh
 npm run test:unit
+npm run build
 ```
 
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-npm run lint
-```
+Node pedido pelo projeto: `^22.18.0` ou `>=24.12.0`. Em `v22.16.0` o install precisa de `--legacy-peer-deps`.

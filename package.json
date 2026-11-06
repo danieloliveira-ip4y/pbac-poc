@@ -1,7 +1,11 @@
 {
-  "name": "pbac-poc",
+  "name": "permission-based-access-control-poc",
   "version": "0.0.0",
   "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/danieloliveira-ip4y/permission-based-access-control-poc.git"
+  },
   "type": "module",
   "scripts": {
     "dev": "vite",
